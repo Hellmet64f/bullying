@@ -94,7 +94,7 @@
             </div>
 
             <!-- LADO DIREITO: Lista de Slides (Horizontal no Mobile, Vertical no Desktop) -->
-            <div id="thumbnails-container" class="w-full md:w-[320px] flex flex-row md:flex-col gap-3 md:gap-4 overflow-x-auto md:overflow-x-hidden overflow-y-hidden md:overflow-y-auto scrollbar-hide py-2 md:py-4 items-center md:items-end justify-start md:justify-center mt-auto md:mt-0 relative z-30 shrink-0">
+            <div id="thumbnails-container" class="w-full md:w-[340px] flex flex-row md:flex-col gap-4 md:gap-5 overflow-x-auto md:overflow-x-hidden overflow-y-hidden md:overflow-y-auto scrollbar-hide py-4 md:py-8 md:pl-10 items-center md:items-end justify-start md:justify-center mt-auto md:mt-0 relative z-30 shrink-0">
                 <!-- Cartões serão injetados aqui via JS -->
             </div>
 
@@ -162,9 +162,9 @@
                 // Imagem de Fundo Principal
                 bgHTML += `<img id="bg-${index}" src="${slide.bgImage}" alt="${slide.title}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0">`;
 
-                // Cartões Laterais (Thumbnails - com tamanhos responsivos)
+                // Cartões Laterais (Thumbnails - com tamanhos responsivos e melhor alinhamento)
                 thumbsHTML += `
-                    <div id="thumb-${index}" onclick="changeSlide(${index})" class="group relative w-[200px] h-[110px] sm:w-[240px] sm:h-[135px] md:w-[280px] md:h-[150px] rounded-lg overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border border-white/10 opacity-50 hover:opacity-100 hover:scale-[1.02] hover:border-white/40">
+                    <div id="thumb-${index}" onclick="changeSlide(${index})" class="group relative w-[180px] h-[100px] sm:w-[220px] sm:h-[120px] md:w-[260px] md:h-[145px] rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border border-white/10 opacity-50 hover:opacity-100 hover:scale-[1.02] hover:border-white/40 transform">
                         <img src="${slide.bgImage}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div id="thumb-overlay-${index}" class="absolute inset-0 transition-colors duration-300 bg-black/60 group-hover:bg-black/30"></div>
                         
@@ -227,8 +227,8 @@
                     bgEl.classList.remove('opacity-0');
                     bgEl.classList.add('opacity-100');
 
-                    // Ativa Cartão Lateral (Estilo Selecionado Responsivo)
-                    thumbEl.className = "group relative w-[200px] h-[110px] sm:w-[240px] sm:h-[135px] md:w-[280px] md:h-[150px] rounded-lg overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border-2 border-white scale-[1.03] md:scale-105 shadow-[0_5px_15px_rgba(0,0,0,0.5)] md:shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-10 md:ml-[-20px]";
+                    // Ativa Cartão Lateral (Estilo Selecionado Responsivo com Transform Translate)
+                    thumbEl.className = "group relative w-[180px] h-[100px] sm:w-[220px] sm:h-[120px] md:w-[260px] md:h-[145px] rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border-2 border-white scale-[1.05] md:scale-110 md:-translate-x-6 shadow-[0_5px_15px_rgba(0,0,0,0.5)] md:shadow-[0_15px_35px_rgba(0,0,0,0.8)] z-10 transform";
                     thumbOverlayEl.className = "absolute inset-0 transition-colors duration-300 bg-black/10";
                     thumbIconEl.className = "absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0";
                 } else {
@@ -239,13 +239,13 @@
                     bgEl.classList.add('opacity-0');
 
                     // Desativa Cartão Lateral (Volta ao normal)
-                    thumbEl.className = "group relative w-[200px] h-[110px] sm:w-[240px] sm:h-[135px] md:w-[280px] md:h-[150px] rounded-lg overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border border-white/10 opacity-50 hover:opacity-100 hover:scale-[1.02] hover:border-white/40";
+                    thumbEl.className = "group relative w-[180px] h-[100px] sm:w-[220px] sm:h-[120px] md:w-[260px] md:h-[145px] rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border border-white/10 opacity-50 hover:opacity-100 hover:scale-[1.02] hover:border-white/40 transform";
                     thumbOverlayEl.className = "absolute inset-0 transition-colors duration-300 bg-black/60 group-hover:bg-black/30";
                     thumbIconEl.className = "absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100";
                 }
             });
 
-            // Dar Scroll na lista da direita para garantir que o selecionado está visível (comporta-se bem no mobile)
+            // Dar Scroll na lista da direita para garantir que o selecionado está visível
             const thumbToScroll = document.getElementById(`thumb-${index}`);
             if(thumbToScroll) {
                 thumbToScroll.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
