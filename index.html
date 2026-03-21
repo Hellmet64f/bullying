@@ -5,10 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projeto Bullying</title>
     
-    <!-- Tailwind CSS (CDN) para o Design -->
+    <!-- Importação de Fontes Premium (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js para o Gráfico -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Estilos Customizados (Animações e Scrollbar) -->
+    <!-- Configuração do Tailwind para usar as novas fontes -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        title: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Estilos Customizados -->
     <style>
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -30,59 +52,84 @@
         .animate-fade-in {
             animation: fadeIn 0.8s ease-out forwards;
         }
+
+        /* Truque para o iframe do Youtube cobrir toda a tela sem mostrar bordas pretas */
+        .video-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300vw;
+            height: 300vh;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        @media (min-width: 768px) {
+            .video-container {
+                width: 150vw;
+                height: 150vh;
+            }
+        }
     </style>
 </head>
 <body class="min-h-[100dvh] bg-[#0a0a0a] font-sans text-white flex items-center justify-center p-0 md:p-4 lg:p-8 relative overflow-hidden selection:bg-red-600/30">
 
-    <!-- BACKGROUND GLOBAL (Efeito Ambilight Desfocado) - Gerado pelo JS -->
+    <!-- BACKGROUND GLOBAL (Efeito Ambilight Desfocado) -->
     <div id="blur-container" class="absolute inset-0 z-0"></div>
 
     <!-- CONTAINER PRINCIPAL DA APLICAÇÃO -->
     <div class="relative z-10 w-full h-[100dvh] md:h-[85vh] md:max-w-[1400px] md:min-h-[700px] bg-[#0d0d0c] md:rounded-[2rem] overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.9)] border-0 md:border border-white/5 flex flex-col">
         
-        <!-- IMAGENS DE FUNDO COM CROSSFADE -->
+        <!-- IMAGENS DE FUNDO E VÍDEO -->
         <div id="bg-container" class="absolute inset-0 z-0 bg-[#0d0d0c]">
-            <!-- As imagens serão injetadas aqui via JS -->
+            
+            <!-- VÍDEO DO YOUTUBE (Fundo do Slide Principal) -->
+            <div id="yt-bg" class="absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out opacity-100 overflow-hidden">
+                <!-- Parâmetros: autoplay, mute, sem controlos, em loop -->
+                <iframe class="video-container" src="https://www.youtube.com/embed/v-5TfJ39sC0?autoplay=1&mute=1&controls=0&loop=1&playlist=v-5TfJ39sC0&modestbranding=1&showinfo=0&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+
+            <!-- As imagens dos outros slides serão injetadas aqui via JS -->
             
             <!-- GRADIENTES (Para escurecer a esquerda e a base, dando leitura ao texto) -->
-            <div class="absolute inset-0 bg-gradient-to-r from-[#0d0d0c]/90 via-[#0d0d0c]/70 to-transparent w-full md:w-[70%] z-10 pointer-events-none"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0c] via-[#0d0d0c]/60 to-transparent h-full z-10 opacity-90 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0d0d0c]/95 via-[#0d0d0c]/70 to-transparent w-full md:w-[75%] z-10 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0c] via-[#0d0d0c]/40 to-transparent h-full z-10 opacity-90 pointer-events-none"></div>
             <div class="absolute inset-0 bg-black/40 z-10 pointer-events-none"></div>
         </div>
 
         <!-- --- LOGO DISCRETA NO TOPO --- -->
         <div class="absolute top-6 left-6 md:top-10 md:left-14 z-50 flex items-center gap-3 pointer-events-none">
             <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-[#E50914] shadow-[0_0_15px_rgba(229,9,20,0.8)] animate-pulse"></div>
-            <span class="text-xs md:text-sm font-bold tracking-[0.3em] text-white/70 md:text-white/50">PROJETO BULLYING</span>
+            <span class="text-xs md:text-sm font-bold tracking-[0.3em] text-white/70 md:text-white/50 font-title">PROJETO BULLYING</span>
         </div>
 
         <!-- --- CONTEÚDO PRINCIPAL --- -->
         <div class="relative z-20 flex-1 flex flex-col md:flex-row px-6 md:px-14 pt-20 md:pt-24 pb-6 md:pb-12 h-full justify-between overflow-hidden">
             
             <!-- LADO ESQUERDO: Informação do "Episódio" -->
-            <div class="flex-1 flex flex-col justify-center md:justify-center w-full max-w-full md:max-w-[60%] lg:max-w-[650px] pr-0 md:pr-10 overflow-y-auto md:overflow-visible scrollbar-hide pb-4 md:pb-0">
+            <div class="flex-1 flex flex-col justify-center md:justify-center w-full max-w-full md:max-w-[60%] lg:max-w-[700px] pr-0 md:pr-10 overflow-y-auto md:overflow-visible scrollbar-hide pb-4 md:pb-0">
                 
                 <!-- Tag / Badge -->
                 <div class="flex items-center gap-3 mb-4 md:mb-6 mt-4 md:mt-0">
-                    <span id="slide-badge" class="bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1 rounded text-[10px] md:text-xs font-bold text-gray-200 uppercase tracking-widest shadow-sm">
+                    <span id="slide-badge" class="bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded text-[10px] md:text-xs font-bold text-gray-200 uppercase tracking-widest shadow-sm font-title">
                         <!-- Conteúdo Injetado via JS -->
                     </span>
                 </div>
                 
                 <!-- Título Principal Animado -->
-                <div class="min-h-[100px] md:min-h-[140px] flex items-end mb-4 md:mb-8">
-                    <h1 id="slide-title" class="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-black text-white uppercase leading-[1.1] md:leading-[1.05] tracking-tight drop-shadow-2xl animate-fade-in-up">
+                <div class="min-h-[100px] md:min-h-[140px] flex items-end mb-4 md:mb-6">
+                    <!-- Utilizando a nova fonte 'font-title' (Montserrat) -->
+                    <h1 id="slide-title" class="font-title text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-black text-white uppercase leading-[1.1] md:leading-[1] tracking-tight drop-shadow-2xl animate-fade-in-up">
                         <!-- Conteúdo Injetado via JS -->
                     </h1>
                 </div>
                 
-                <!-- Descrição -->
-                <p id="slide-desc" class="text-gray-300 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed max-w-full md:max-w-[90%] drop-shadow-lg font-light animate-fade-in">
+                <!-- Descrição e Gráfico (Container) -->
+                <div id="slide-desc" class="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed max-w-full md:max-w-[90%] drop-shadow-lg font-light animate-fade-in">
                     <!-- Conteúdo Injetado via JS -->
-                </p>
+                </div>
 
                 <!-- Dica de Teclado (Oculta em ecrãs muito pequenos) -->
-                <div class="mt-6 md:mt-8 hidden sm:flex items-center gap-2 text-gray-400 opacity-60 text-[10px] md:text-xs">
+                <div class="mt-6 md:mt-8 hidden sm:flex items-center gap-2 text-gray-400 opacity-60 text-[10px] md:text-xs font-medium">
                     <kbd class="bg-white/10 px-2 py-1 rounded border border-white/10 font-sans">A</kbd> / 
                     <kbd class="bg-white/10 px-2 py-1 rounded border border-white/10 font-sans">D</kbd> 
                     <span>ou</span> 
@@ -93,7 +140,7 @@
                 
             </div>
 
-            <!-- LADO DIREITO: Lista de Slides (Horizontal no Mobile, Vertical no Desktop) -->
+            <!-- LADO DIREITO: Lista de Slides -->
             <div id="thumbnails-container" class="w-full md:w-[340px] flex flex-row md:flex-col gap-4 md:gap-5 overflow-x-auto md:overflow-x-hidden overflow-y-hidden md:overflow-y-auto scrollbar-hide py-4 md:py-8 md:pl-10 items-center md:items-end justify-start md:justify-center mt-auto md:mt-0 relative z-30 shrink-0">
                 <!-- Cartões serão injetados aqui via JS -->
             </div>
@@ -104,12 +151,14 @@
     <!-- SCRIPT DA APLICAÇÃO -->
     <script>
         // --- DADOS DOS SLIDES ---
+        // Adicionada a propriedade hasChart no slide de Estatísticas
         const slidesData = [
             {
                 badge: "Apresentação",
                 title: "CRIADO POR MIGUEL E GABRIEL",
-                description: "Bem-vindos ao nosso projeto escolar. Navegue pela lista ao lado para mergulhar no nosso estudo sobre o Bullying: o que é, como identificar os sinais, as consequências e como ajudar.<br><br><span class='text-white/40 text-[10px] font-bold uppercase tracking-widest'>Contatos dos Autores:</span><br><a href='mailto:miguel-rmontana@estudante.rs.gov.br' class='text-[#E50914] hover:text-white transition-colors text-sm md:text-base font-medium'>miguel-rmontana@estudante.rs.gov.br</a><br><a href='mailto:gabriel-efdslopes@estudante.rs.gov.br' class='text-[#E50914] hover:text-white transition-colors text-sm md:text-base font-medium'>gabriel-efdslopes@estudante.rs.gov.br</a>",
+                description: "Bem-vindos ao nosso projeto escolar. Navegue pela lista ao lado para mergulhar no nosso estudo sobre o Bullying: o que é, como identificar os sinais, as consequências e como ajudar.<br><br><span class='text-white/40 text-[10px] font-bold uppercase tracking-widest font-title'>Contatos dos Autores:</span><br><a href='mailto:miguel-rmontana@estudante.rs.gov.br' class='text-[#E50914] hover:text-white transition-colors text-sm md:text-base font-medium'>miguel-rmontana@estudante.rs.gov.br</a><br><a href='mailto:gabriel-efdslopes@estudante.rs.gov.br' class='text-[#E50914] hover:text-white transition-colors text-sm md:text-base font-medium'>gabriel-efdslopes@estudante.rs.gov.br</a>",
                 bgImage: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+                isVideo: true // Define que este slide mostra o vídeo do YouTube
             },
             {
                 badge: "Capítulo 1",
@@ -122,6 +171,13 @@
                 title: "TIPOS DE AGRESSÃO",
                 description: "As agressões vão muito além do contacto físico. Podem ser verbais (insultos constantes), relacionais (exclusão social deliberada) ou Cyberbullying — o assédio através da internet que persegue a vítima 24 horas por dia, até dentro do seu próprio quarto.",
                 bgImage: "https://images.unsplash.com/photo-1614064641913-6b7140414c71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+            },
+            {
+                badge: "Estatísticas",
+                title: "DADOS NO BRASIL",
+                description: "No Brasil, os casos de bullying nas escolas continuam a crescer. O gráfico abaixo ilustra as formas mais comuns de agressão reportadas pelos estudantes, destacando a predominância da violência verbal e social.<br><br><div class='relative w-full max-w-sm h-48 md:h-56 mt-4 p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm'><canvas id='bullyingChart'></canvas></div>",
+                bgImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+                hasChart: true // Flag para ativar o Chart.js
             },
             {
                 badge: "Capítulo 3",
@@ -144,6 +200,7 @@
         ];
 
         let currentSlide = 0;
+        let chartInstance = null; // Guardar a instância do gráfico
 
         // Inicialização do DOM
         function initApp() {
@@ -156,21 +213,21 @@
             let thumbsHTML = '';
 
             slidesData.forEach((slide, index) => {
-                // Background Desfocado (Ambilight)
+                // Background Desfocado
                 blurHTML += `<div id="blur-${index}" class="absolute inset-0 scale-110 blur-[80px] transition-opacity duration-1000 ease-in-out opacity-0 z-0" style="background-image: url('${slide.bgImage}'); background-size: cover; background-position: center;"></div>`;
 
-                // Imagem de Fundo Principal
-                bgHTML += `<img id="bg-${index}" src="${slide.bgImage}" alt="${slide.title}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0">`;
+                // Imagem de Fundo (Se não for o slide do vídeo, adicionamos a imagem padrão)
+                bgHTML += `<img id="bg-${index}" src="${slide.bgImage}" alt="${slide.title}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0 z-0">`;
 
-                // Cartões Laterais (Thumbnails - com tamanhos responsivos e melhor alinhamento)
+                // Cartões Laterais
                 thumbsHTML += `
                     <div id="thumb-${index}" onclick="changeSlide(${index})" class="group relative w-[180px] h-[100px] sm:w-[220px] sm:h-[120px] md:w-[260px] md:h-[145px] rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border border-white/10 opacity-50 hover:opacity-100 hover:scale-[1.02] hover:border-white/40 transform">
                         <img src="${slide.bgImage}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div id="thumb-overlay-${index}" class="absolute inset-0 transition-colors duration-300 bg-black/60 group-hover:bg-black/30"></div>
                         
                         <div class="absolute inset-0 flex flex-col justify-end p-3 md:p-4 bg-gradient-to-t from-black/90 via-black/30 to-transparent">
-                            <h3 class="text-white text-xs md:text-sm font-bold truncate tracking-wide drop-shadow-md">${slide.title}</h3>
-                            <span class="text-gray-300 md:text-gray-400 text-[9px] md:text-xs font-medium">${slide.badge}</span>
+                            <h3 class="font-title text-white text-xs md:text-sm font-bold truncate tracking-wide drop-shadow-md">${slide.title}</h3>
+                            <span class="text-gray-300 md:text-gray-400 text-[9px] md:text-xs font-medium uppercase tracking-wider">${slide.badge}</span>
                         </div>
 
                         <div id="thumb-icon-${index}" class="absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
@@ -185,15 +242,61 @@
             });
 
             blurContainer.innerHTML = blurHTML;
-            // Insere as imagens no topo do container de backgrounds para ficarem atrás dos gradientes
-            bgContainer.insertAdjacentHTML('afterbegin', bgHTML);
+            bgContainer.insertAdjacentHTML('beforeend', bgHTML);
             thumbContainer.innerHTML = thumbsHTML;
 
-            // Carrega o primeiro slide
             changeSlide(0);
-            
-            // Ativa EventListeners do Teclado
             setupKeyboard();
+        }
+
+        // Desenhar o Gráfico (Chart.js)
+        function renderChart() {
+            const ctx = document.getElementById('bullyingChart');
+            if (!ctx) return;
+
+            // Se já existir um gráfico, destrói para não duplicar
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Verbal / Psicológico', 'Social', 'Físico', 'Cyberbullying'],
+                    datasets: [{
+                        data: [45, 25, 15, 15],
+                        backgroundColor: [
+                            '#E50914', // Vermelho Netflix
+                            '#888888', // Cinza Claro
+                            '#444444', // Cinza Escuro
+                            '#ffffff'  // Branco
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    color: '#fff',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: '#cccccc',
+                                font: { family: 'Inter', size: 11 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         // Função para mudar o Slide
@@ -201,7 +304,7 @@
             currentSlide = index;
             const data = slidesData[index];
 
-            // Atualiza Textos
+            // 1. Atualizar Textos
             document.getElementById('slide-badge').innerText = data.badge;
             
             const titleEl = document.getElementById('slide-title');
@@ -212,7 +315,17 @@
             descEl.innerHTML = data.description;
             retriggerAnimation(descEl, 'animate-fade-in');
 
-            // Atualiza Classes dos Elementos Visuais
+            // 2. Controlar o Fundo do Vídeo (YouTube)
+            const ytBg = document.getElementById('yt-bg');
+            if (data.isVideo) {
+                ytBg.classList.remove('opacity-0');
+                ytBg.classList.add('opacity-100');
+            } else {
+                ytBg.classList.remove('opacity-100');
+                ytBg.classList.add('opacity-0');
+            }
+
+            // 3. Atualizar Fundo Imagens e Cartões
             slidesData.forEach((_, i) => {
                 const blurEl = document.getElementById(`blur-${i}`);
                 const bgEl = document.getElementById(`bg-${i}`);
@@ -221,63 +334,65 @@
                 const thumbIconEl = document.getElementById(`thumb-icon-${i}`);
 
                 if(i === index) {
-                    // Ativa Background
                     blurEl.classList.remove('opacity-0', 'z-0');
                     blurEl.classList.add('opacity-40', 'z-10');
-                    bgEl.classList.remove('opacity-0');
-                    bgEl.classList.add('opacity-100');
+                    
+                    // Mostra imagem de fundo (apenas se não for vídeo)
+                    if (!data.isVideo) {
+                        bgEl.classList.remove('opacity-0');
+                        bgEl.classList.add('opacity-100');
+                    }
 
-                    // Ativa Cartão Lateral (Estilo Selecionado Responsivo com Transform Translate)
-                    thumbEl.className = "group relative w-[180px] h-[100px] sm:w-[220px] sm:h-[120px] md:w-[260px] md:h-[145px] rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border-2 border-white scale-[1.05] md:scale-110 md:-translate-x-6 shadow-[0_5px_15px_rgba(0,0,0,0.5)] md:shadow-[0_15px_35px_rgba(0,0,0,0.8)] z-10 transform";
+                    // Cartão Selecionado
+                    thumbEl.className = "group relative w-[180px] h-[100px] sm:w-[220px] sm:h-[120px] md:w-[260px] md:h-[145px] rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border-2 border-[#E50914] scale-[1.05] md:scale-110 md:-translate-x-6 shadow-[0_5px_15px_rgba(229,9,20,0.3)] md:shadow-[0_15px_35px_rgba(229,9,20,0.4)] z-10 transform";
                     thumbOverlayEl.className = "absolute inset-0 transition-colors duration-300 bg-black/10";
                     thumbIconEl.className = "absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0";
                 } else {
-                    // Desativa Background
                     blurEl.classList.remove('opacity-40', 'z-10');
                     blurEl.classList.add('opacity-0', 'z-0');
                     bgEl.classList.remove('opacity-100');
                     bgEl.classList.add('opacity-0');
 
-                    // Desativa Cartão Lateral (Volta ao normal)
+                    // Cartões Não Selecionados
                     thumbEl.className = "group relative w-[180px] h-[100px] sm:w-[220px] sm:h-[120px] md:w-[260px] md:h-[145px] rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border border-white/10 opacity-50 hover:opacity-100 hover:scale-[1.02] hover:border-white/40 transform";
                     thumbOverlayEl.className = "absolute inset-0 transition-colors duration-300 bg-black/60 group-hover:bg-black/30";
                     thumbIconEl.className = "absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100";
                 }
             });
 
-            // Dar Scroll na lista da direita para garantir que o selecionado está visível
+            // 4. Renderizar o Gráfico caso exista na página atual
+            if (data.hasChart) {
+                // Aguarda um pequeno momento para o DOM aplicar o innerHTML antes de buscar a canvas
+                setTimeout(() => {
+                    renderChart();
+                }, 100);
+            }
+
+            // 5. Scroll automático no mobile
             const thumbToScroll = document.getElementById(`thumb-${index}`);
             if(thumbToScroll) {
                 thumbToScroll.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
         }
 
-        // Reinicia a animação CSS
         function retriggerAnimation(element, animationClass) {
             element.classList.remove(animationClass);
-            void element.offsetWidth; // Força um reflow na página (necessário para o browser reiniciar a animação)
+            void element.offsetWidth; 
             element.classList.add(animationClass);
         }
 
         // --- SISTEMA DE NAVEGAÇÃO POR TECLADO ---
         function setupKeyboard() {
             document.addEventListener('keydown', (e) => {
-                // Se pressionou "Seta Direita" ou a letra "D" (vai para a frente)
                 if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
-                    if (currentSlide < slidesData.length - 1) {
-                        changeSlide(currentSlide + 1);
-                    }
+                    if (currentSlide < slidesData.length - 1) changeSlide(currentSlide + 1);
                 } 
-                // Se pressionou "Seta Esquerda" ou a letra "A" (vai para trás)
                 else if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
-                    if (currentSlide > 0) {
-                        changeSlide(currentSlide - 1);
-                    }
+                    if (currentSlide > 0) changeSlide(currentSlide - 1);
                 }
             });
         }
 
-        // Executar inicialização quando o ecrã carregar
         window.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
