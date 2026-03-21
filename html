@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Bullying - Apresentação Interativa</title>
+    
+    <!-- Tailwind CSS (CDN) para o Design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Estilos Customizados (Animações e Scrollbar) -->
+    <style>
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#0a0a0a] font-sans text-white flex items-center justify-center p-4 lg:p-8 relative overflow-hidden selection:bg-red-600/30">
+
+    <!-- BACKGROUND GLOBAL (Efeito Ambilight Desfocado) - Gerado pelo JS -->
+    <div id="blur-container" class="absolute inset-0 z-0"></div>
+
+    <!-- CONTAINER PRINCIPAL DA APLICAÇÃO -->
+    <div class="relative z-10 w-full max-w-[1300px] h-[80vh] min-h-[700px] bg-[#0d0d0c] rounded-[2rem] overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.9)] border border-white/5 flex flex-col">
+        
+        <!-- IMAGENS DE FUNDO COM CROSSFADE -->
+        <div id="bg-container" class="absolute inset-0 z-0 bg-[#0d0d0c]">
+            <!-- As imagens serão injetadas aqui via JS -->
+            
+            <!-- GRADIENTES (Para escurecer a esquerda e a base, dando leitura ao texto) -->
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0d0d0c] via-[#0d0d0c]/80 to-transparent w-full md:w-[70%] z-10 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0d0d0c] via-transparent to-transparent h-full z-10 opacity-80 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-black/30 z-10 pointer-events-none"></div>
+        </div>
+
+        <!-- --- NAVBAR (CABEÇALHO) --- -->
+        <nav class="relative z-20 flex items-center justify-between px-8 md:px-14 py-8">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group">
+                <div class="w-5 h-5 rounded-full bg-[#E50914] shadow-[0_0_15px_rgba(229,9,20,0.6)] group-hover:shadow-[0_0_25px_rgba(229,9,20,0.9)] transition-shadow"></div>
+                <span class="text-xl font-bold tracking-[0.2em] text-white">PROJETO</span>
+            </div>
+
+            <!-- Menu Central -->
+            <div class="hidden lg:flex items-center gap-10 text-sm font-medium">
+                <button class="text-white relative after:content-[''] after:absolute after:-bottom-2 after:left-1/2 after:-translate-x-1/2 after:w-4 after:h-[2px] after:bg-[#E50914] hover:text-white transition-colors">
+                    Início
+                </button>
+                <button class="text-gray-400 hover:text-white transition-colors">Apresentação</button>
+                <button class="text-gray-400 hover:text-white transition-colors">Tópicos</button>
+                <button class="text-gray-400 hover:text-white transition-colors">Recursos</button>
+            </div>
+
+            <!-- Menu Direita (Ícones em SVG puro) -->
+            <div class="flex items-center gap-6 text-gray-300">
+                <button class="hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </button>
+                <button class="hover:text-white transition-colors relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-[#E50914] rounded-full border border-[#0d0d0c]"></span>
+                </button>
+                <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=60" alt="Avatar" class="w-9 h-9 rounded-md object-cover border border-white/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+            </div>
+        </nav>
+
+        <!-- --- CONTEÚDO PRINCIPAL --- -->
+        <div class="relative z-20 flex-1 flex flex-col md:flex-row px-8 md:px-14 pb-12">
+            
+            <!-- LADO ESQUERDO: Informação do "Episódio" -->
+            <div class="flex-1 flex flex-col justify-center max-w-[650px] pr-4 md:pr-10 mt-10 md:mt-0">
+                
+                <!-- Tag / Badge -->
+                <div class="flex items-center gap-3 mb-6">
+                    <span id="slide-badge" class="bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1 rounded text-xs font-bold text-gray-200 uppercase tracking-widest shadow-sm">
+                        <!-- Conteúdo Injetado via JS -->
+                    </span>
+                </div>
+                
+                <!-- Título Principal Animado -->
+                <div class="min-h-[140px] flex items-end mb-8">
+                    <h1 id="slide-title" class="text-5xl md:text-6xl lg:text-[4.5rem] font-black text-white uppercase leading-[1.05] tracking-tight drop-shadow-2xl animate-fade-in-up">
+                        <!-- Conteúdo Injetado via JS -->
+                    </h1>
+                </div>
+                
+                <!-- Descrição -->
+                <p id="slide-desc" class="text-gray-300 text-base md:text-lg lg:text-xl leading-relaxed max-w-[90%] drop-shadow-lg font-light animate-fade-in">
+                    <!-- Conteúdo Injetado via JS -->
+                </p>
+
+                <!-- Dica de Teclado -->
+                <div class="mt-8 flex items-center gap-2 text-gray-400 opacity-60 text-xs">
+                    <kbd class="bg-white/10 px-2 py-1 rounded border border-white/10 font-sans">A</kbd> / 
+                    <kbd class="bg-white/10 px-2 py-1 rounded border border-white/10 font-sans">D</kbd> 
+                    <span>ou</span> 
+                    <kbd class="bg-white/10 px-2 py-1 rounded border border-white/10 font-sans">←</kbd> / 
+                    <kbd class="bg-white/10 px-2 py-1 rounded border border-white/10 font-sans">→</kbd> 
+                    <span>para navegar</span>
+                </div>
+                
+            </div>
+
+            <!-- LADO DIREITO: Lista Vertical de Slides -->
+            <div id="thumbnails-container" class="w-full md:w-[320px] flex flex-col gap-3 overflow-y-auto scrollbar-hide py-4 items-end justify-center mt-10 md:mt-0 max-h-[600px] relative z-30">
+                <!-- Cartões serão injetados aqui via JS -->
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCRIPT DA APLICAÇÃO -->
+    <script>
+        // --- DADOS DOS SLIDES ---
+        const slidesData = [
+            {
+                badge: "Apresentação",
+                title: "CRIADO POR MIGUEL E GABRIEL",
+                description: "Bem-vindos ao nosso projeto escolar. Navegue pelos 'episódios' na lista ao lado para mergulhar no nosso estudo sobre o Bullying: o que é, como identificar os sinais, as consequências e, o mais importante, como podemos ajudar.",
+                bgImage: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+            },
+            {
+                badge: "Capítulo 1",
+                title: "O QUE É O BULLYING?",
+                description: "O bullying é um conjunto de atos de violência física ou psicológica, intencionais e repetidos. Ocorre numa relação de desequilíbrio de poder, causando angústia e sofrimento à vítima. Não é apenas uma 'brincadeira de crianças', é agressão.",
+                bgImage: "https://images.unsplash.com/photo-1506869640319-fe1a24fd76dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+            },
+            {
+                badge: "Capítulo 2",
+                title: "TIPOS DE AGRESSÃO",
+                description: "As agressões vão muito além do contacto físico. Podem ser verbais (insultos constantes), relacionais (exclusão social deliberada) ou Cyberbullying — o assédio através da internet que persegue a vítima 24 horas por dia, até dentro do seu próprio quarto.",
+                bgImage: "https://images.unsplash.com/photo-1614064641913-6b7140414c71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+            },
+            {
+                badge: "Capítulo 3",
+                title: "SINAIS DE ALERTA",
+                description: "Muitas vítimas sofrem em absoluto silêncio. Fique atento a mudanças repentinas: tristeza profunda, isolamento social, queda acentuada no rendimento escolar, perturbações no sono ou desculpas frequentes para faltar às aulas.",
+                bgImage: "https://images.unsplash.com/photo-1488528656683-11f8100913a8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+            },
+            {
+                badge: "Capítulo 4",
+                title: "CONSEQUÊNCIAS",
+                description: "As marcas deixadas podem durar uma vida inteira. O impacto afeta severamente o desenvolvimento, gerando transtornos de ansiedade, depressão, baixa autoestima e, em casos extremos, ideação suicida. O trauma é real e duradouro.",
+                bgImage: "https://images.unsplash.com/photo-1512805981445-3162b4859a85?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+            },
+            {
+                badge: "Capítulo 5",
+                title: "PROCURAR APOIO",
+                description: "A prevenção é responsabilidade de toda a comunidade. Se está a sofrer ou conhece alguém que esteja, quebre o silêncio! Fale com um adulto de confiança ou ligue para linhas de apoio. Pedir ajuda não é fraqueza, é um ato de coragem.",
+                bgImage: "https://images.unsplash.com/photo-1520694478166-daaaaec95b69?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+            }
+        ];
+
+        let currentSlide = 0;
+
+        // Inicialização do DOM
+        function initApp() {
+            const blurContainer = document.getElementById('blur-container');
+            const bgContainer = document.getElementById('bg-container');
+            const thumbContainer = document.getElementById('thumbnails-container');
+
+            let blurHTML = '';
+            let bgHTML = '';
+            let thumbsHTML = '';
+
+            slidesData.forEach((slide, index) => {
+                // Background Desfocado (Ambilight)
+                blurHTML += `<div id="blur-${index}" class="absolute inset-0 scale-110 blur-[80px] transition-opacity duration-1000 ease-in-out opacity-0 z-0" style="background-image: url('${slide.bgImage}'); background-size: cover; background-position: center;"></div>`;
+
+                // Imagem de Fundo Principal
+                bgHTML += `<img id="bg-${index}" src="${slide.bgImage}" alt="${slide.title}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0">`;
+
+                // Cartões Laterais (Thumbnails)
+                thumbsHTML += `
+                    <div id="thumb-${index}" onclick="changeSlide(${index})" class="group relative w-[280px] h-[150px] rounded-lg overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border border-white/10 opacity-50 hover:opacity-100 hover:scale-[1.02] hover:border-white/40">
+                        <img src="${slide.bgImage}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div id="thumb-overlay-${index}" class="absolute inset-0 transition-colors duration-300 bg-black/60 group-hover:bg-black/30"></div>
+                        
+                        <div class="absolute inset-0 flex flex-col justify-end p-4 bg-gradient-to-t from-black/90 via-black/20 to-transparent">
+                            <h3 class="text-white text-sm font-bold truncate tracking-wide">${slide.title}</h3>
+                            <span class="text-gray-400 text-xs font-medium">${slide.badge}</span>
+                        </div>
+
+                        <div id="thumb-icon-${index}" class="absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
+                            <div class="w-12 h-12 rounded-full bg-black/50 backdrop-blur-md border border-white/50 flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold text-white border border-white/10">${index + 1}</div>
+                    </div>
+                `;
+            });
+
+            blurContainer.innerHTML = blurHTML;
+            // Insere as imagens no topo do container de backgrounds para ficarem atrás dos gradientes
+            bgContainer.insertAdjacentHTML('afterbegin', bgHTML);
+            thumbContainer.innerHTML = thumbsHTML;
+
+            // Carrega o primeiro slide
+            changeSlide(0);
+            
+            // Ativa EventListeners do Teclado
+            setupKeyboard();
+        }
+
+        // Função para mudar o Slide
+        function changeSlide(index) {
+            currentSlide = index;
+            const data = slidesData[index];
+
+            // Atualiza Textos
+            document.getElementById('slide-badge').innerText = data.badge;
+            
+            const titleEl = document.getElementById('slide-title');
+            titleEl.innerText = data.title;
+            retriggerAnimation(titleEl, 'animate-fade-in-up');
+
+            const descEl = document.getElementById('slide-desc');
+            descEl.innerText = data.description;
+            retriggerAnimation(descEl, 'animate-fade-in');
+
+            // Atualiza Classes dos Elementos Visuais
+            slidesData.forEach((_, i) => {
+                const blurEl = document.getElementById(`blur-${i}`);
+                const bgEl = document.getElementById(`bg-${i}`);
+                const thumbEl = document.getElementById(`thumb-${i}`);
+                const thumbOverlayEl = document.getElementById(`thumb-overlay-${i}`);
+                const thumbIconEl = document.getElementById(`thumb-icon-${i}`);
+
+                if(i === index) {
+                    // Ativa Background
+                    blurEl.classList.remove('opacity-0', 'z-0');
+                    blurEl.classList.add('opacity-40', 'z-10');
+                    bgEl.classList.remove('opacity-0');
+                    bgEl.classList.add('opacity-100');
+
+                    // Ativa Cartão Lateral (Estilo Selecionado)
+                    thumbEl.className = "group relative w-[280px] h-[150px] rounded-lg overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border-2 border-white scale-105 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-10 ml-[-20px]";
+                    thumbOverlayEl.className = "absolute inset-0 transition-colors duration-300 bg-black/10";
+                    thumbIconEl.className = "absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0";
+                } else {
+                    // Desativa Background
+                    blurEl.classList.remove('opacity-40', 'z-10');
+                    blurEl.classList.add('opacity-0', 'z-0');
+                    bgEl.classList.remove('opacity-100');
+                    bgEl.classList.add('opacity-0');
+
+                    // Desativa Cartão Lateral (Volta ao normal)
+                    thumbEl.className = "group relative w-[280px] h-[150px] rounded-lg overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 ease-out border border-white/10 opacity-50 hover:opacity-100 hover:scale-[1.02] hover:border-white/40";
+                    thumbOverlayEl.className = "absolute inset-0 transition-colors duration-300 bg-black/60 group-hover:bg-black/30";
+                    thumbIconEl.className = "absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100";
+                }
+            });
+
+            // Dar Scroll na lista da direita para garantir que o selecionado está visível
+            const thumbToScroll = document.getElementById(`thumb-${index}`);
+            if(thumbToScroll) {
+                thumbToScroll.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // Reinicia a animação CSS
+        function retriggerAnimation(element, animationClass) {
+            element.classList.remove(animationClass);
+            void element.offsetWidth; // Força um reflow na página (necessário para o browser reiniciar a animação)
+            element.classList.add(animationClass);
+        }
+
+        // --- SISTEMA DE NAVEGAÇÃO POR TECLADO ---
+        function setupKeyboard() {
+            document.addEventListener('keydown', (e) => {
+                // Se pressionou "Seta Direita" ou a letra "D" (vai para a frente)
+                if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
+                    if (currentSlide < slidesData.length - 1) {
+                        changeSlide(currentSlide + 1);
+                    }
+                } 
+                // Se pressionou "Seta Esquerda" ou a letra "A" (vai para trás)
+                else if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
+                    if (currentSlide > 0) {
+                        changeSlide(currentSlide - 1);
+                    }
+                }
+            });
+        }
+
+        // Executar inicialização quando o ecrã carregar
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
